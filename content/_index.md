@@ -2,15 +2,7 @@
 
 <img class="avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=WinterHat4&accessoriesType=Blank&hatColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=Heather&eyeType=Happy&eyebrowType=Default&mouthType=Default&skinColor=Light" alt="avatar">
 
-Hey, I'm Maverick - a minimal template. Maverick is a minimal Hugo blog theme base on Listed by Ronalds Vilciņš.
+Welcome to my blog, where I share my experiences and insights as a junior solidity developer in the exciting world of blockchain technology. I'll be writing about the latest developments in blockchain security and sharing my solutions to challenging Capture the Flag (CTF) exercises. Follow along as I continue to learn and grow as a developer, and join the conversation by leaving comments and asking questions. Thanks for stopping by!
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam finibus ipsum ac erat aliquam dapibus. Vestibulum vehicula placerat ex, a consectetur odio pharetra quis. Mauris id urna ante. Fusce pharetra diam ac nisi aliquet, vel egestas ex iaculis. Pellentesque laoreet cursus tellus sed pellentesque. Praesent a rhoncus elit. Nunc ipsum nisl, consequat sit amet pretium quis, gravida id ipsum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet consectetur adipiscing elit ut aliquam purus. Massa tempor nec feugiat nisl pretium fusce id velit. Morbi quis commodo odio aenean sed adipiscing. Senectus et netus et malesuada fames ac. Tortor condimentum lacinia quis vel eros donec ac odio. Risus in hendrerit gravida rutrum quisque. Posuere ac ut consequat semper. Sodales ut etiam sit amet
-
-- 📺 Demo: https://maverick.canhtran.me
-- ❤️ Github: https://github.com/canhtran/maverick
-
-Thanks in advance
-
-[<img src="https://images.squarespace-cdn.com/content/v1/5cf6ec742e677c000119beb3/1559871045027-2XSVXYWSZD9POBO0QOVD/buy-me-a-coffee-button.png" width="100"/>](https://www.buymeacoffee.com/canh)
+<img src="https://chat.openai.com/favicon.ico" width="16">
+This blog would not have been possible without the assistance of ChatGPT. With the help of chatGPT, I am able to produce clear, concise, and well-written content in a very short time
