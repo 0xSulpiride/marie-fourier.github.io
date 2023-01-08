@@ -74,10 +74,10 @@ Gas target
     You are 75 above the target
 ```
 
-Setting slot value from zero to non-zero costs 20k gas\
-So one thing we can do here is setting the value of `lastPurchaseTime` to 1 so the slot is already set a non-zero value when `purchaseToken` is called for the first time.\
-Setting the slot value from non-zero to non-zero costs still costs 5000 or 2900 depending on whether the slot is cold or warm (whether is was accessed in current transaction before or not)\
-In our case `lastPurchaseTime` is accessed before setting it a new value in `require` statement, so `SSTORE` should cost 2900
+Setting a slot value from zero to non-zero costs 20k gas\
+So, one thing we can do here is setting the value of `lastPurchaseTime` to 1, so the slot is already set a non-zero value when `purchaseToken` is called for the first time.\
+Setting a slot value from non-zero to non-zero costs still costs 5000 or 2900, depending on whether the slot is cold or warm (whether is was accessed in current transaction before or not)\
+In our case, `lastPurchaseTime` is accessed before setting it is set to a new value in the `require` statement, so `SSTORE` should cost 2900 gas
 ```sol
 contract Require {
     uint256 constant COOLDOWN = 1 minutes;
@@ -91,7 +91,7 @@ Gas target
 
 Gas usage is 17100 less, which makes sense because `20000 - 2900 = 17100`
 
-I wanted to see how much gas I could save if I rewrote the `purchaseToken` function completely in yul
+I wanted to see how much gas I could save by completely rewriting the `purchaseToken` function in Yul
 ```sol
 function purchaseToken() external payable {
     assembly {
@@ -155,7 +155,7 @@ First, the state variables `contributors` and `createTime` are never changed aft
 Immutable variables won't be stored in the storage, and all references to those variables will be replaced by the values assigned to them in the constructor.\
 This will save us a lot of gas
 
-Second, instead of storing `createTime` we can calculate and store the release time. This should reduce the gas usage by 2 since we're not using `ADD`
+Second, instead of storing `createTime` we can calculate and store the release time. This should reduce the gas usage by 2, since we're not using `ADD`
 
 Third, instead of dividing the contract balance by 4 we could just shift it by 2 bits (since 4 = 2^2), shifting costs 2 gas less than dividing
 
@@ -218,19 +218,19 @@ contract Attacker {
 }
 ```
 
-In this challenge the Attacker contract must mint 150 NFTs from `NotRareToken` contract and send them to the EOA of the attacker. This should be done in one transaction and it should not consume more than 6,029,700 gas
+In this challenge the `Attacker` contract must mint 150 NFTs from the `NotRareToken` contract and send them to the EOA of the attacker in a single transaction that consumes no more than 6,029,700 gas.
 
 _Analysis:_
 
-The solution seems to be pretty straightforward. We just need to call `mint()` function to mint an NFT and send that NFT to EOA 150 times
+The solution appears to be straightforward. The `mint()` and `transferFrom()` functions can be called repeatedly to mint and transfer an NFT to the EOA. The `mint()` function increments the `totalSupply` by 1 and mints an NFT with an ID of `totalSupply` to `msg.sender` by calling `_safeMint()`.
 
-`mint()` increments totalSupply by 1 and mints an nft with id `totalySupply` to `msg.sender` by calling `_safeMint()`. `_safeMint()` may invoke the `onERC721Received()` on `msg.sender` if it's the contract, which could cost us unnecessary gas, but since we will be calling `mint()` inside the constructor, the `Attacker.code.length` will be 0 and `_safeMint()` will think that the Attacker is EOA
+It should be noted that the `_safeMint()` function may invoke the `onERC721Received()` function on `msg.sender` if it is a contract, which could result in unnecessary gas consumption. However, as the `mint()` function will be called within the constructor of the `Attacker` contract, the `Attacker.code.length` will be equal to 0, causing `_safeMint()` to treat `Attacker` as an EOA.
 
-Another problem here is that we need the ID of a NFT to transfer it. `totalSupply` is private so we can't see it from inside the contract, but we can fetch the value of any slot making an RPC call and pass that value in the constructor. In `NotRareToken` contract `totalSupply` is stored in slot 7
+To transfer an NFT, the ID of the NFT must be known. `totalSupply` is private and not accessible within the contract, but the value of its slot can be fetched via an RPC call and passed to the constructor. In the `NotRareToken` contract, `totalSupply` is stored in slot 7."
 
 test/Mint150.js:63
 ```js
-const offset = await ethers.provider.getStorageAt(victimToken.address, 7);
+const offset = await ethers.provider.getStorageAt(victimToken.address, 7) + 1;
 const txn = await attackerContract
     .connect(attacker)
     .deploy([ victimToken.address, offset ]);
@@ -246,4 +246,38 @@ OptimizedAttacker:
             }
         }
     }
+```
+
+However, the rules do not indicate that we are permitted to modify the test case in this manner. Let's retrieve the offset within the contract
+
+```sol
+contract OptimizedAttacker {
+    constructor(address victim) {
+        unchecked {
+            // in the test case all the existing nfts belong to a single wallet.
+            // we can fetch the offset by looking at the balance of that wallet
+            uint256 offset = IERC721(victim).balanceOf(IERC721(victim).ownerOf(1)) + 1;
+
+            // minted one NFT before going inside the loop to make the balance of the Attacker non-zero.
+            // otherwise every iteration of the loop will set the balance from zero to non-zero (which costs 20k gas)
+            // and sending the NFT to EOA will set the balance back to zero again.
+            // we can save a lot of gas by keeping the balance of the attacker non-zero
+            NotRareToken(victim).mint();
+            for (uint256 i = 1; i < 150; i++) {
+                NotRareToken(victim).mint();
+                IERC721(victim).transferFrom(address(this), msg.sender, i + offset);
+            }
+            IERC721(victim).transferFrom(address(this), msg.sender, offset);
+        }
+    }
+}
+```
+```js
+Mint150
+    Gas target
+           Current gas use:   5429661
+           The gas target is: 6029700
+      ✔ The functions MUST meet the expected gas efficiency (6443ms)
+    Business logic
+      ✔ The attacker MUST mint 150 NFTs in one transaction (5996ms)
 ```
