@@ -1,0 +1,191 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>RareSkills Gas Puzzles - My blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Writeups on gas puzzles by RareSkills - https://github.com/RareSkills/gas-puzzles"><meta property="og:image" content><meta property="og:title" content="RareSkills Gas Puzzles"><meta property="og:description" content="Writeups on gas puzzles by RareSkills - https://github.com/RareSkills/gas-puzzles"><meta property="og:type" content="article"><meta property="og:url" content="https://marie-fourier.github.io/posts/gas-puzzles-writeups/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-01-06T00:00:00+00:00"><meta property="article:modified_time" content="2023-01-06T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="RareSkills Gas Puzzles"><meta name=twitter:description content="Writeups on gas puzzles by RareSkills - https://github.com/RareSkills/gas-puzzles"><script src=https://marie-fourier.github.iojs/feather.min.js></script>
+<link href=https://marie-fourier.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=https://marie-fourier.github.io/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css><script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js></script>
+<script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js onload=renderMathInElement(document.body)></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script></head><body><div class=content><header><div class=main><a href=https://marie-fourier.github.io>My blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>All posts</a>
+<a href=/about>About</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>RareSkills Gas Puzzles</h1><div class=meta>Posted on Jan 6, 2023</div></div><section class=body><p>Gas Puzzles by <a href=https://github.com/RareSkills>Rareskills</a> are a sequence of smart contracts to practice gas optimization. These are used as practice assignments for RareSkills.io and the <a href="https://www.udemy.com/course/advanced-solidity-understanding-and-optimizing-gas-costs/?referralCode=C4684D6872713525E349">Udemy Gas Optimization Course</a></p><h2 id=array-sum>Array Sum</h2><p>Let&rsquo;s start with the easiest one</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>OptimizedArraySum</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span>[] array;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>setArray</span>(<span style=color:#66d9ef>uint256</span>[] <span style=color:#66d9ef>memory</span> _array) <span style=color:#66d9ef>external</span> {
+</span></span><span style=display:flex><span>        require(_array.length <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>10</span>, <span style=color:#e6db74>&#34;too long&#34;</span>);
+</span></span><span style=display:flex><span>        array <span style=color:#f92672>=</span> _array;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>getArraySum</span>() <span style=color:#66d9ef>external</span> <span style=color:#66d9ef>view</span> <span style=color:#66d9ef>returns</span> (<span style=color:#66d9ef>uint256</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>uint256</span> sum;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>uint256</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> array.length; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>            sum <span style=color:#f92672>+=</span> array[i];
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> sum;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>23399</span>
+</span></span><span style=display:flex><span>    The gas target <span style=color:#66d9ef>is</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>23396</span>
+</span></span><span style=display:flex><span>    You are <span style=color:#ae81ff>3</span> above the target
+</span></span></code></pre></div><p>We can refactor the function by deleting <code>uint256 sum</code> and <code>return</code> statements. We could also create a static variable for storing the length of the dynamic array <code>array</code>, but in this case the memory extension costs more than accessing <code>array.length</code> because the length of the array is very small</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>getArraySum</span>() <span style=color:#66d9ef>external</span> <span style=color:#66d9ef>view</span> <span style=color:#66d9ef>returns</span> (<span style=color:#66d9ef>uint256</span> sum) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>uint256</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> array.length; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>        sum <span style=color:#f92672>+=</span> array[i];
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>23391</span>
+</span></span></code></pre></div><h2 id=require>Require</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>Require</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> <span style=color:#66d9ef>constant</span> COOLDOWN <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>minutes</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> lastPurchaseTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>purchaseToken</span>() <span style=color:#66d9ef>external</span> <span style=color:#66d9ef>payable</span> {
+</span></span><span style=display:flex><span>        require(
+</span></span><span style=display:flex><span>            msg.value <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>.<span style=color:#ae81ff>1</span> <span style=color:#66d9ef>ether</span> <span style=color:#f92672>&amp;&amp;</span>
+</span></span><span style=display:flex><span>                block.timestamp <span style=color:#f92672>&gt;</span> lastPurchaseTime <span style=color:#f92672>+</span> COOLDOWN,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;cannot purchase&#34;</span>
+</span></span><span style=display:flex><span>        );
+</span></span><span style=display:flex><span>        lastPurchaseTime <span style=color:#f92672>=</span> block.timestamp;
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// mint the user a token
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>43392</span>
+</span></span><span style=display:flex><span>    The gas target <span style=color:#66d9ef>is</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>43317</span>
+</span></span><span style=display:flex><span>    You are <span style=color:#ae81ff>75</span> above the target
+</span></span></code></pre></div><p>Setting slot value from zero to non-zero costs 20k gas<br>So one thing we can do here is setting the value of <code>lastPurchaseTime</code> to 1 so the slot is already set a non-zero value when <code>purchaseToken</code> is called for the first time.<br>Setting the slot value from non-zero to non-zero costs still costs 5000 or 2900 depending on whether the slot is cold or warm (whether is was accessed in current transaction before or not)<br>In our case <code>lastPurchaseTime</code> is accessed before setting it a new value in <code>require</code> statement, so <code>SSTORE</code> should cost 2900</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>Require</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> <span style=color:#66d9ef>constant</span> COOLDOWN <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>minutes</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> lastPurchaseTime <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>26292</span>
+</span></span></code></pre></div><p>Gas usage is 17100 less, which makes sense because <code>20000 - 2900 = 17100</code></p><p>I wanted to see how much gas I could save if I rewrote the <code>purchaseToken</code> function completely in yul</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>purchaseToken</span>() <span style=color:#66d9ef>external</span> <span style=color:#66d9ef>payable</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assembly</span> {
+</span></span><span style=display:flex><span>        if <span style=color:#a6e22e>or</span>(
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>iszero</span>(<span style=color:#a6e22e>eq</span>(<span style=color:#a6e22e>callvalue</span>(), <span style=color:#ae81ff>100000000000000000</span>)), <span style=color:#75715e>// 0.1 ether
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#a6e22e>iszero</span>(<span style=color:#a6e22e>gt</span>(
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>timestamp</span>(),
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>add</span>(<span style=color:#a6e22e>sload</span>(lastPurchaseTime<span style=color:#960050;background-color:#1e0010>.</span>slot), <span style=color:#ae81ff>60</span>) <span style=color:#75715e>// 1 minute
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            ))
+</span></span><span style=display:flex><span>        ) {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// EIP 838 (https://github.com/ethereum/EIPs/issues/838)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#f92672>let</span> error <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0x00</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>mstore</span>(error, <span style=color:#ae81ff>0x08c379a0</span>) <span style=color:#75715e>// error selector
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#a6e22e>mstore</span>(<span style=color:#a6e22e>add</span>(error, <span style=color:#ae81ff>0x20</span>), <span style=color:#ae81ff>0x20</span>) <span style=color:#75715e>// string offset
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#a6e22e>mstore</span>(<span style=color:#a6e22e>add</span>(error, <span style=color:#ae81ff>0x40</span>), <span style=color:#ae81ff>0x0f</span>) <span style=color:#75715e>// length(&#34;cannot purchase&#34;) = 0x0f bytes
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#a6e22e>mstore</span>(<span style=color:#a6e22e>add</span>(error, <span style=color:#ae81ff>0x60</span>), <span style=color:#ae81ff>0x63616e6e6f742070757263686173650000000000000000000000000000000000</span>) <span style=color:#75715e>// &#34;cannot purchase&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#a6e22e>revert</span>(<span style=color:#a6e22e>add</span>(error, <span style=color:#ae81ff>0x1c</span>), <span style=color:#a6e22e>sub</span>(<span style=color:#ae81ff>0x80</span>, <span style=color:#ae81ff>0x1c</span>)) <span style=color:#75715e>// error selector bytes start at (error + 28bytes)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>sstore</span>(lastPurchaseTime<span style=color:#960050;background-color:#1e0010>.</span>slot, <span style=color:#a6e22e>timestamp</span>())
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>26215</span>
+</span></span></code></pre></div><p>It is 77 gas less</p><h2 id=distribute>Distribute</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>Distribute</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>address</span>[<span style=color:#ae81ff>4</span>] <span style=color:#66d9ef>public</span> contributors;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> <span style=color:#66d9ef>public</span> createTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>constructor</span>(<span style=color:#66d9ef>address</span>[<span style=color:#ae81ff>4</span>] <span style=color:#66d9ef>memory</span> _contributors) <span style=color:#66d9ef>payable</span> {
+</span></span><span style=display:flex><span>        contributors <span style=color:#f92672>=</span> _contributors;
+</span></span><span style=display:flex><span>        createTime <span style=color:#f92672>=</span> block.timestamp;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>distribute</span>() <span style=color:#66d9ef>external</span> {
+</span></span><span style=display:flex><span>        require(
+</span></span><span style=display:flex><span>            block.timestamp <span style=color:#f92672>&gt;</span> createTime <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>weeks</span>,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;cannot distribute yet&#34;</span>
+</span></span><span style=display:flex><span>        );
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>uint256</span> amount <span style=color:#f92672>=</span> <span style=color:#66d9ef>address</span>(this).balance <span style=color:#f92672>/</span> <span style=color:#ae81ff>4</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>payable</span>(contributors[<span style=color:#ae81ff>0</span>]).transfer(amount);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>payable</span>(contributors[<span style=color:#ae81ff>1</span>]).transfer(amount);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>payable</span>(contributors[<span style=color:#ae81ff>2</span>]).transfer(amount);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>payable</span>(contributors[<span style=color:#ae81ff>3</span>]).transfer(amount);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>71953</span>
+</span></span><span style=display:flex><span>    The gas target <span style=color:#66d9ef>is</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>57044</span>
+</span></span><span style=display:flex><span>    You are <span style=color:#ae81ff>14909</span> above the target
+</span></span></code></pre></div><p>First, the state variables <code>contributors</code> and <code>createTime</code> are never changed after the construction, so we can make them <code>immutable</code><br>Immutable variables won&rsquo;t be stored in the storage, and all references to those variables will be replaced by the values assigned to them in the constructor.<br>This will save us a lot of gas</p><p>Second, instead of storing <code>createTime</code> we can calculate and store the release time. This should reduce the gas usage by 2 since we&rsquo;re not using <code>ADD</code></p><p>Third, instead of dividing the contract balance by 4 we could just shift it by 2 bits (since 4 = 2^2), shifting costs 2 gas less than dividing</p><p>And finally, we can destroy the contract after the distribution is complete by calling <code>selfdestruct</code>. This will transfer the contract balance to a given address and will refund some gas</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>OptimizedDistribute</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>address</span> <span style=color:#66d9ef>payable</span> <span style=color:#66d9ef>immutable</span> contributors0;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>address</span> <span style=color:#66d9ef>payable</span> <span style=color:#66d9ef>immutable</span> contributors1;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>address</span> <span style=color:#66d9ef>payable</span> <span style=color:#66d9ef>immutable</span> contributors2;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>address</span> <span style=color:#66d9ef>payable</span> <span style=color:#66d9ef>immutable</span> contributors3;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>immutable</span> releaseTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>constructor</span>(<span style=color:#66d9ef>address</span> <span style=color:#66d9ef>payable</span>[<span style=color:#ae81ff>4</span>] <span style=color:#66d9ef>memory</span> _contributors) <span style=color:#66d9ef>payable</span> {
+</span></span><span style=display:flex><span>        contributors0 <span style=color:#f92672>=</span> _contributors[<span style=color:#ae81ff>0</span>];
+</span></span><span style=display:flex><span>        contributors1 <span style=color:#f92672>=</span> _contributors[<span style=color:#ae81ff>1</span>];
+</span></span><span style=display:flex><span>        contributors2 <span style=color:#f92672>=</span> _contributors[<span style=color:#ae81ff>2</span>];
+</span></span><span style=display:flex><span>        contributors3 <span style=color:#f92672>=</span> _contributors[<span style=color:#ae81ff>3</span>];
+</span></span><span style=display:flex><span>        releaseTime <span style=color:#f92672>=</span> block.timestamp <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>weeks</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>distribute</span>() <span style=color:#66d9ef>external</span> {
+</span></span><span style=display:flex><span>        require(
+</span></span><span style=display:flex><span>            block.timestamp <span style=color:#f92672>&gt;</span> releaseTime,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;cannot distribute yet&#34;</span>
+</span></span><span style=display:flex><span>        );
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>uint256</span> amount <span style=color:#f92672>=</span> <span style=color:#66d9ef>address</span>(this).balance <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>2</span>;
+</span></span><span style=display:flex><span>        contributors0.transfer(amount);
+</span></span><span style=display:flex><span>        contributors1.transfer(amount);
+</span></span><span style=display:flex><span>        contributors2.transfer(amount);
+</span></span><span style=display:flex><span>        selfdestruct(contributors3);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Gas target
+</span></span><span style=display:flex><span>    Current gas use<span style=color:#f92672>:</span>   <span style=color:#ae81ff>57038</span>
+</span></span></code></pre></div><h2 id=mint-150>Mint 150</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;@openzeppelin/contracts/token/ERC721/ERC721.sol&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// You may not modify this contract or the openzeppelin contracts
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>NotRareToken</span> <span style=color:#66d9ef>is</span> ERC721 {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>mapping</span>(<span style=color:#66d9ef>address</span> <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>bool</span>) <span style=color:#66d9ef>private</span> alreadyMinted;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>uint256</span> <span style=color:#66d9ef>private</span> totalSupply;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>constructor</span>() ERC721(<span style=color:#e6db74>&#34;NotRareToken&#34;</span>, <span style=color:#e6db74>&#34;NRT&#34;</span>) {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>mint</span>() <span style=color:#66d9ef>external</span> {
+</span></span><span style=display:flex><span>        totalSupply<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>        _safeMint(msg.sender, totalSupply);
+</span></span><span style=display:flex><span>        alreadyMinted[msg.sender] <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>Attacker</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>constructor</span>(<span style=color:#66d9ef>address</span> victim) {}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In this challenge the Attacker contract must mint 150 NFTs from <code>NotRareToken</code> contract and send them to the EOA of the attacker. This should be done in one transaction and it should not consume more than 6,029,700 gas</p><p><em>Analysis:</em></p><p>The solution seems to be pretty straightforward. We just need to call <code>mint()</code> function to mint an NFT and send that NFT to EOA 150 times</p><p><code>mint()</code> increments totalSupply by 1 and mints an nft with id <code>totalySupply</code> to <code>msg.sender</code> by calling <code>_safeMint()</code>. <code>_safeMint()</code> may invoke the <code>onERC721Received()</code> on <code>msg.sender</code> if it&rsquo;s the contract, which could cost us unnecessary gas, but since we will be calling <code>mint()</code> inside the constructor, the <code>Attacker.code.length</code> will be 0 and <code>_safeMint()</code> will think that the Attacker is EOA</p><p>Another problem here is that we need the ID of a NFT to transfer it. <code>totalSupply</code> is private so we can&rsquo;t see it from inside the contract, but we can fetch the value of any slot making an RPC call and pass that value in the constructor. In <code>NotRareToken</code> contract <code>totalSupply</code> is stored in slot 7</p><p>test/Mint150.js:63</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>offset</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>ethers</span>.<span style=color:#a6e22e>provider</span>.<span style=color:#a6e22e>getStorageAt</span>(<span style=color:#a6e22e>victimToken</span>.<span style=color:#a6e22e>address</span>, <span style=color:#ae81ff>7</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>txn</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>attackerContract</span>
+</span></span><span style=display:flex><span>    .<span style=color:#a6e22e>connect</span>(<span style=color:#a6e22e>attacker</span>)
+</span></span><span style=display:flex><span>    .<span style=color:#a6e22e>deploy</span>([ <span style=color:#a6e22e>victimToken</span>.<span style=color:#a6e22e>address</span>, <span style=color:#a6e22e>offset</span> ]);
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>OptimizedAttacker:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sol data-lang=sol><span style=display:flex><span>    <span style=color:#66d9ef>contract</span> <span style=color:#a6e22e>Attacker</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>constructor</span>(<span style=color:#66d9ef>address</span> victim, <span style=color:#66d9ef>uint256</span> offset) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>uint256</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>150</span>; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>                NotRareToken(victim).mint();
+</span></span><span style=display:flex><span>                IERC721(victim).transferFrom(<span style=color:#66d9ef>address</span>(this), msg.sender, i <span style=color:#f92672>+</span> offset);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></div></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeups>writeups</a></li></ul></nav></div><div id=comments><script src=https://utteranc.es/client.js repo=canhtran/maverick issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/marie-fourier rel=me title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://twitter.com/HubZein rel=me title=Twitter><i data-feather=twitter></i></a>
+<a class=border></a></div><div class=footer-info>2023 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
