@@ -21,7 +21,7 @@ paginate=5 # articles per page
   katex = true # enable KaTeX support
 
   [params.comments]
-    githubRepo = 'canhtran/maverick'
+    githubRepo = 'marie-fourier/marie-fourier.github.io'
     theme = 'github-light'
 
 # Social Tags
